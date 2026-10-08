@@ -15,6 +15,20 @@ municipal data (age, height, trunk girth, crown spread, vitality, etc.).
    sourced from the [Seoul Open Data Plaza](http://data.seoul.go.kr/) API), extracts the
    relevant fields, and feeds them into an L-system to render that tree's shape.
 
+## Installation
+
+### Software
+
+#### TouchDesigner
+
+- Version 2025.32280
+
+### Hardware
+
+#### Raspberry Pi Pico
+
+#### LeapMotion
+
 ## Repo layout
 
 ```
