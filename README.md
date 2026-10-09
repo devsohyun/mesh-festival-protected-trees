@@ -21,13 +21,63 @@ municipal data (age, height, trunk girth, crown spread, vitality, etc.).
 
 #### TouchDesigner
 
-- Version 2025.32280
+- Version **2025.32280**
 
 ### Hardware
 
-#### Raspberry Pi Pico
+#### Raspberry Pi Pico (tree ID controller)
 
-#### LeapMotion
+The Pico is the audience controller for selecting a tree's unique ID. It uses:
+
+- Rotary encoder — scroll through IDs
+- Push button — confirm the selected ID
+- SSD1306 OLED display — show the current / confirmed ID
+- W5500 Ethernet module — backup in case serial can't be used (OSC mode). The hardware
+  is installed, but this path is not used in the current setup.
+
+Setup: install [Thonny](https://thonny.org/) and upload `controller/TreeID_Selector.py`
+to the Pico as `main.py` (see [Deploying to the Pico](#controller)).
+
+#### Leap Motion
+
+Uses the original Leap Motion Controller (first generation). Install the Ultraleap Hand
+Tracking software (Gemini) on the TouchDesigner machine and make sure the tracking
+service runs at login.
+
+
+## Autostart (installation Mac)
+
+Target machine: Mac mini (M2), macOS Sonoma 14, TouchDesigner at
+`/Applications/TouchDesigner.app`.
+
+`scripts/start.sh` waits for the system to settle (and up to 30 s for the Pico's
+`/dev/cu.usbmodem*` port), keeps the Mac awake, then opens
+`builds/protected_trees_v2_json.toe`. A LaunchAgent runs it at every login and relaunches
+TouchDesigner if it crashes. Quitting TouchDesigner normally (Cmd+Q) does **not** relaunch
+it, so it can be closed for maintenance.
+
+Install once, as the user that will auto-login:
+
+```sh
+./scripts/install_autostart.sh     # installs and starts TouchDesigner immediately
+./scripts/uninstall_autostart.sh   # removes it again
+```
+
+Log: `~/Library/Logs/ProtectedTrees/start.log`. The repo can live anywhere, but re-run the
+installer if you move it (the plist stores absolute paths).
+
+macOS settings for unattended running:
+
+- **System Settings → Users & Groups → Automatically log in as** the show user
+  (requires FileVault to be off). LaunchAgents only run after login.
+- **Lock Screen**: screen saver, display off, and "require password" → Never.
+- **Energy** (`sudo pmset -a sleep 0 displaysleep 0 disksleep 0 autorestart 1`):
+  never sleep, and power back on automatically after a power cut.
+- **General → Software Update → Automatic updates**: off, so nothing restarts mid-show.
+- **Notifications**: enable Do Not Disturb / Focus.
+- **Login Items**: make sure the Ultraleap tracking software is allowed to run at login.
+- Run `start.sh` by hand once and accept any macOS permission prompts (e.g. USB/serial
+  access) and TouchDesigner dialogs, so they don't block an unattended boot.
 
 ## Repo layout
 
@@ -35,6 +85,7 @@ municipal data (age, height, trunk girth, crown spread, vitality, etc.).
 builds/     TouchDesigner project files (.toe)
 controller/ MicroPython firmware for the Raspberry Pi Pico controller
 data/       Local snapshot of the Seoul protected-trees dataset (Korean + English)
+scripts/    Autostart scripts for the installation Mac
 ```
 
 ### `builds/`
