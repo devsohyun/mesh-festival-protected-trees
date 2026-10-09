@@ -79,13 +79,28 @@ macOS settings for unattended running:
 - Run `start.sh` by hand once and accept any macOS permission prompts (e.g. USB/serial
   access) and TouchDesigner dialogs, so they don't block an unattended boot.
 
+### Nightly shutdown
+
+The exhibition closes at 21:00; the Mac shuts itself down cleanly at **21:30** every day.
+In the morning the guard presses the power button once and everything starts by itself.
+The guard should **not** use the power button (or the power strip) to turn it off.
+
+```sh
+sudo ./scripts/install_nightly_shutdown.sh     # install
+sudo ./scripts/uninstall_nightly_shutdown.sh   # remove
+```
+
+To change the time, edit `SHUTDOWN_HOUR` / `SHUTDOWN_MINUTE` in the script and run the
+installer again. If the Mac is switched on after 21:30 (e.g. for maintenance) it stays on
+until 21:30 the next day.
+
 ## Repo layout
 
 ```
 builds/     TouchDesigner project files (.toe)
 controller/ MicroPython firmware for the Raspberry Pi Pico controller
 data/       Local snapshot of the Seoul protected-trees dataset (Korean + English)
-scripts/    Autostart scripts for the installation Mac
+scripts/    Autostart and nightly shutdown scripts for the installation Mac
 ```
 
 ### `builds/`
