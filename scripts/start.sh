@@ -35,6 +35,19 @@ if ! ls /dev/cu.usbmodem* >/dev/null 2>&1; then
     log "WARNING: no Pico serial port found, starting anyway"
 fi
 
+# Close any TouchDesigner already open (e.g. an empty project reopened by macOS at login),
+# so only the show file runs.
+if pgrep -x TouchDesigner >/dev/null; then
+    log "Closing TouchDesigner that was already running"
+    pkill -x TouchDesigner
+    for ((i = 0; i < 10; i++)); do
+        pgrep -x TouchDesigner >/dev/null || break
+        sleep 1
+    done
+    pkill -9 -x TouchDesigner 2>/dev/null
+    sleep 1
+fi
+
 # Keep display and system awake for as long as this process (TouchDesigner, after exec) lives.
 /usr/bin/caffeinate -dims -w $$ &
 

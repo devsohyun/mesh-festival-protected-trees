@@ -75,7 +75,12 @@ macOS settings for unattended running:
   never sleep, and power back on automatically after a power cut.
 - **General → Software Update → Automatic updates**: off, so nothing restarts mid-show.
 - **Notifications**: enable Do Not Disturb / Focus.
-- **Login Items**: make sure the Ultraleap tracking software is allowed to run at login.
+- **Login Items**: make sure the Ultraleap tracking software is allowed to run at login,
+  and that TouchDesigner is **not** listed (otherwise an empty project opens at login).
+- Stop macOS reopening apps after a restart (otherwise an empty TouchDesigner opens too):
+  `defaults write com.apple.loginwindow TALLogoutSavesState -bool false` and
+  `defaults write ca.derivative.TouchDesigner NSQuitAlwaysKeepsWindows -bool false`.
+  `start.sh` also closes any TouchDesigner already running before opening the show.
 - Run `start.sh` by hand once and accept any macOS permission prompts (e.g. USB/serial
   access) and TouchDesigner dialogs, so they don't block an unattended boot.
 
