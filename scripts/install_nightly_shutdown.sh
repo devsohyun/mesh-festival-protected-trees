@@ -7,7 +7,7 @@
 
 LABEL="com.protectedtrees.nightly-shutdown"
 PLIST="/Library/LaunchDaemons/$LABEL.plist"
-SHUTDOWN_HOUR=21
+SHUTDOWN_HOUR=22
 SHUTDOWN_MINUTE=30
 
 plist_content() {
